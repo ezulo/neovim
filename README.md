@@ -1,9 +1,5 @@
-# nvim-lite
-A suckless NeoVim Config
+# Eduardo's Neovim Config
+Simple neovim config.
 
-Requires NeoVim 0.11.2 or later.
+Based on [radleylewis/nvim-lite](https://github.com/radleylewis/nvim-lite).
 
-Copy and enjoy it with:
-```bash
-mkdir -p ~/.config/nvim && curl -fsSL https://raw.githubusercontent.com/radleylewis/nvim-lite/master/init.lua -o ~/.config/nvim/init.lua
-```
