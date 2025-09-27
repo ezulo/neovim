@@ -2,6 +2,9 @@
 require('autocmd.latex')
 require('autocmd.platformio')
 
+-- nvim_config location
+local vimrc = os.getenv("MYVIMRC")
+
 -- Leader Keys
 vim.g.mapleader = " "                              -- Set leader key to space
 vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
@@ -148,8 +151,8 @@ vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
 -- Quick config editing
-vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
-vim.keymap.set("n", "<leader>rl", ":so ~/.config/nvim/init.lua<CR>", { desc = "Reload config" })
+vim.keymap.set("n", "<leader>rc", ":e " .. vimrc .. "<CR>", { desc = "Edit config" })
+vim.keymap.set("n", "<leader>rl", ":so " .. vimrc .. "<CR>", { desc = "Reload config" })
 
 -- ============================================================================
 -- USEFUL FUNCTIONS
