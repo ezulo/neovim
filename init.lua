@@ -1,7 +1,3 @@
--- custom imports
-require('autocmd.latex')
-require('autocmd.platformio')
-
 -- nvim_config location
 local vimrc = os.getenv("MYVIMRC")
 
@@ -621,3 +617,9 @@ local function setup_dynamic_statusline()
 end
 
 setup_dynamic_statusline()
+
+-- custom imports
+require('autocmd.latex')
+require('autocmd.platformio')
+require('custom.cpp')
+
