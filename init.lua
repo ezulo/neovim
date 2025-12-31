@@ -8,6 +8,9 @@ vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
 -- lazy config
 require('config.lazy')
 
+-- lspconfig
+require('lspconfig')
+
 -- theme & transparency
 vim.cmd.colorscheme("unokai")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
@@ -95,10 +98,6 @@ vim.opt.splitright = true                          -- Vertical splits go right
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
 -- Center screen when jumping (and enable highlighting)
-vim.keymap.set("n", "n", ":silent set hlsearch<CR>nzzzv", {
-    desc = "Next search result (centered)",
-    silent = true
-})
 vim.keymap.set("n", "N", ":silent set hlsearch<CR>Nzzzv", {
     desc = "Previous search result (centered)",
     silent = true
@@ -310,7 +309,7 @@ local function FloatingTerminal()
     if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
         terminal_state.buf = vim.api.nvim_create_buf(false, true)
         -- Set buffer options for better terminal experience
-        vim.api.nvim_buf_set_option(terminal_state.buf, 'bufhidden', 'hide')
+        vim.api.nvim_set_option_value('bufhidden', 'hide', { buf = terminal_state.buf})
     end
 
     -- Calculate window dimensions
@@ -331,11 +330,11 @@ local function FloatingTerminal()
     })
 
     -- Set transparency for the floating window
-    vim.api.nvim_win_set_option(terminal_state.win, 'winblend', 0)
+    vim.api.nvim_set_option_value('winblend', 0, { win = terminal_state.win } )
 
     -- Set transparent background for the window
-    vim.api.nvim_win_set_option(terminal_state.win, 'winhighlight',
-        'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder')
+    vim.api.nvim_set_option_value('winhighlight',
+        'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder', { win = terminal_state.win } )
 
     -- Define highlight groups for transparency
     vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
@@ -537,16 +536,6 @@ local function file_type()
     return (icons[ft] or ft)
 end
 
--- Word count for text files
-local function word_count()
-    local ft = vim.bo.filetype
-    if ft == "markdown" or ft == "text" or ft == "tex" then
-        local words = vim.fn.wordcount().words
-        return "  " .. words .. " words "
-    end
-    return ""
-end
-
 -- File size
 local function file_size()
     local size = vim.fn.getfsize(vim.fn.expand('%'))
@@ -578,7 +567,7 @@ local function mode_icon()
         ["!"] = "SHELL",
         t = "TERMINAL"
     }
-    return modes[mode] or "  " .. mode:upper()
+    return modes[mode] or { "  " .. mode:upper() }
 end
 
 _G.mode_icon = mode_icon
@@ -598,14 +587,18 @@ local function setup_dynamic_statusline()
                 "%#StatusLineBold#",
                 "  %{v:lua.mode_icon()}",
                 "%#StatusLine#",
-                " │ %f %h%m%r",
+                " │ ",
+                "%f %h%m%r",
+                " │",
                 "%{v:lua.git_branch()}",
                 " │ ",
                 "%{v:lua.file_type()}",
-                " │ ",
+                " ",
                 "%{v:lua.file_size()}",
-                "%=",                     -- Right-align everything after this
-                "%l:%c  %P ",             -- Line:Column and Percentage
+                "%=",     -- Right-align everything after this
+                "%l:%c ", -- Line:Column
+                " │ ",
+                "%P ",    -- Percentage
             }
         end
     })
