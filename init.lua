@@ -5,17 +5,20 @@ local vimrc = os.getenv("MYVIMRC")
 vim.g.mapleader = " "                              -- Set leader key to space
 vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
 
--- lazy config
-require('config.lazy')
-
--- lspconfig
-require('lspconfig')
-
 -- theme & transparency
-vim.cmd.colorscheme("unokai")
+vim.cmd("set termguicolors")
+--vim.cmd.colorscheme("unokai")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+
+
+-- Lazy
+require('config.lazy')
+
+-- plugins
+require('lspconfig')
+require('mini.pick').setup()
 
 -- Basic settings
 vim.opt.number = true                              -- Line numbers
@@ -140,7 +143,7 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Quick file navigation
-vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>e", ":Oil<CR>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>f", ':FzfLua files<CR>', { desc = "Open FZF" })
 -- vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
 
@@ -400,9 +403,6 @@ vim.cmd([[
   hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
 ]])
 
--- NvimTree
-vim.keymap.set("n", "<leader>n", ':NvimTreeToggle<CR>', { desc = "Open nvim-tree" })
-
 -- Alternative navigation (more intuitive)
 vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', { desc = 'New tab' })
 vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { desc = 'Close tab' })
@@ -575,6 +575,7 @@ _G.git_branch = git_branch
 _G.file_type = file_type
 _G.file_size = file_size
 
+
 vim.cmd([[
     highlight StatusLineBold gui=bold cterm=bold
 ]])
@@ -615,5 +616,4 @@ setup_dynamic_statusline()
 -- custom imports
 require('autocmd.latex')
 require('autocmd.platformio')
-require('custom.cpp')
 
