@@ -105,7 +105,7 @@ vim.opt.splitright = true -- Vertical splits go right
 -- KEYMAPS --
 
 -- Shell
-if vim.loop.os_uname().sysname == "Windows" then
+if vim.loop.os_uname().sysname == "Windows_NT" then
   if vim.fn.executable("pwsh.exe") == 1 then
     vim.opt.shell = "pwsh.exe"
   else

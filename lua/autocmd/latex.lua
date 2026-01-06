@@ -1,4 +1,4 @@
-if vim.loop.os_uname().sysname == "Windows" then
+if vim.loop.os_uname().sysname == "Windows_NT" then
   -- Do nothing
 else
   latexgroup = vim.api.nvim_create_augroup("Latex", {})
