@@ -1,14 +1,14 @@
 vim.cmd("set termguicolors")
 
 return {
-    {
-        'wsdjeg/git.nvim',
-        dependencies = {
-            { 'wsdjeg/job.nvim' },
-            { 'wsdjeg/notify.nvim' },
-        },
+  {
+    'wsdjeg/git.nvim',
+    dependencies = {
+      { 'wsdjeg/job.nvim' },
+      { 'wsdjeg/notify.nvim' },
     },
-    {
+  },
+  {
     "norcalli/nvim-colorizer.lua",
     version = "*",
     lazy = false,
