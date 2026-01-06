@@ -47,7 +47,9 @@ return {
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
-    opts = {},
+    opts = {
+      vim.cmd([[hi markdownCodeBlock guifg=#c0c0c0]])
+    },
   },
   {
     "folke/trouble.nvim",
