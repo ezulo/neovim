@@ -1,20 +1,20 @@
 vim.cmd("set termguicolors")
 
 return {
-  { 
+  {
     "norcalli/nvim-colorizer.lua",
     version = "*",
-      lazy = false,
-      config = function()
-  	require 'colorizer'.setup {
-  	    '*',
-  	    css = { rgb_fn = true; },
-  	    html = { names = true; },
-  	    conf = { rgb_fn = true; }
-  	}
-      end,
+    lazy = false,
+    config = function()
+      require 'colorizer'.setup {
+        '*',
+        css = { rgb_fn = true, },
+        html = { names = true, },
+        conf = { rgb_fn = true, }
+      }
+    end,
   },
-  { 
+  {
     "ibhagwan/fzf-lua",
     -- optional for icon support
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -22,28 +22,7 @@ return {
     -- dependencies = { "nvim-mini/mini.icons" },
     opts = {}
   },
-  { 
-    "neovim/nvim-lspconfig",
-    dependencies = {
-        {
-  	  "folke/lazydev.nvim",
-  	  ft = "lua", -- only load on lua files
-  	  opts = {
-  	    library = {
-  	      -- See the configuration section for more details
-  	      -- Load luvit types when the `vim.uv` word is found
-  	      { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-  	    },
-  	  },
-        },
-    },
-    config = function()
-        vim.lsp.enable('lua_ls')
-        vim.lsp.enable('marksman')
-        vim.lsp.enable('clangd')
-    end,
-  },
-  { 
+  {
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
@@ -54,16 +33,16 @@ return {
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
   },
-  { 
+  {
     'MeanderingProgrammer/render-markdown.nvim',
-      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-      ---@module 'render-markdown'
-      ---@type render.md.UserConfig
-      opts = {},
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
   },
-  { 
+  {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
     cmd = "Trouble",
@@ -99,5 +78,14 @@ return {
         desc = "Quickfix List (Trouble)",
       },
     },
-  }
+  },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    event = "VeryLazy", -- Load after startup for better performance (adjust if needed)
+    opts = {},          -- Will call require('ufo').setup({}) with default options
+    config = function() -- Uncomment and customize one of the options below
+      require('ufo').setup()
+    end,
+  },
 }
