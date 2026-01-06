@@ -1,16 +1,15 @@
-if vim.fn.has(win32) then
-    -- Do nothing
+if vim.loop.os_uname().sysname == "Windows" then
+  -- Do nothing
 else
-    piogroup = vim.api.nvim_create_augroup("PlatformIO", {})
-    -- cpplint
-    vim.api.nvim_create_autocmd("BufWritePost", {
-        group = piogroup,
-        pattern = { "**/platformio/**/src/*.c", "**/platformio/**/src/*.cpp" },
-        callback = function()
-            local fp = vim.fn.expand('%:p')
-            local res = vim.fn.system("cpplint "..fp)
-            print(res)
-        end
-    })
+  piogroup = vim.api.nvim_create_augroup("PlatformIO", {})
+  -- cpplint
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = piogroup,
+    pattern = { "**/platformio/**/src/*.c", "**/platformio/**/src/*.cpp" },
+    callback = function()
+      local fp = vim.fn.expand('%:p')
+      local res = vim.fn.system("cpplint " .. fp)
+      print(res)
+    end
+  })
 end
-
