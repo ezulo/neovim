@@ -45,21 +45,21 @@ vim.opt.hlsearch = true   -- don't highlight search results
 vim.opt.incsearch = true  -- Show matches as you type
 
 ---- Visual settings
-vim.opt.termguicolors = true                      -- Enable 24-bit colors
-vim.opt.signcolumn = "yes"                        -- Always show sign column
-vim.opt.colorcolumn = "100"                       -- Show column at 100 characters
-vim.opt.showmatch = true                          -- Highlight matching brackets
-vim.opt.matchtime = 2                             -- How long to show matching bracket
-vim.opt.cmdheight = 1                             -- Command line height
-vim.opt.completeopt = "menuone,noinsert,noselect" -- Completion options
-vim.opt.showmode = false                          -- Don't show mode in command line
-vim.opt.pumheight = 10                            -- Popup menu height
-vim.opt.pumblend = 10                             -- Popup menu transparency
-vim.opt.winblend = 0                              -- Floating window transparency
-vim.opt.conceallevel = 0                          -- Don't hide markup
-vim.opt.concealcursor = ""                        -- Don't hide cursor line markup
-vim.opt.lazyredraw = true                         -- Don't redraw during macros
-vim.opt.synmaxcol = 300                           -- Syntax highlighting limit
+vim.opt.termguicolors = true             -- Enable 24-bit colors
+vim.opt.signcolumn = "yes"               -- Always show sign column
+vim.opt.colorcolumn = "100"              -- Show column at 100 characters
+vim.opt.showmatch = true                 -- Highlight matching brackets
+vim.opt.matchtime = 2                    -- How long to show matching bracket
+vim.opt.cmdheight = 1                    -- Command line height
+vim.opt.completeopt = "menuone,noinsert" -- Completion options
+vim.opt.showmode = false                 -- Don't show mode in command line
+vim.opt.pumheight = 10                   -- Popup menu height
+vim.opt.pumblend = 10                    -- Popup menu transparency
+vim.opt.winblend = 0                     -- Floating window transparency
+vim.opt.conceallevel = 0                 -- Don't hide markup
+vim.opt.concealcursor = ""               -- Don't hide cursor line markup
+vim.opt.lazyredraw = true                -- Don't redraw during macros
+vim.opt.synmaxcol = 300                  -- Syntax highlighting limit
 
 -- File handling
 vim.opt.backup = false                            -- Don't create backup files
@@ -102,8 +102,6 @@ vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 vim.opt.splitbelow = true -- Horizontal splits go below
 vim.opt.splitright = true -- Vertical splits go right
 
--- KEYMAPS --
-
 -- Shell
 if vim.loop.os_uname().sysname == "Windows_NT" then
   if vim.fn.executable("pwsh.exe") == 1 then
@@ -114,6 +112,29 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
 else
   vim.opt.shell = os.getenv("SHELL")
 end
+
+-- KEYMAPS --
+
+-- Completion menu navigation
+vim.keymap.set("i", "<Tab>", function()
+  return vim.fn.pumvisible() == 1 and "<C-y>" or "<Tab>"
+end, { expr = true, desc = "Accept completion or insert tab" })
+
+vim.keymap.set("i", "<CR>", function()
+  return vim.fn.pumvisible() == 1 and "<C-y>" or "<CR>"
+end, { expr = true, desc = "Accept completion or newline" })
+
+vim.keymap.set("i", "<Esc>", function()
+  return vim.fn.pumvisible() == 1 and "<C-e>" or "<Esc>"
+end, { expr = true, desc = "Close popup or exit insert mode" })
+
+vim.keymap.set("i", "<C-j>", function()
+  return vim.fn.pumvisible() == 1 and "<C-n>" or "<Down>"
+end, { expr = true, desc = "Next item or move down" })
+
+vim.keymap.set("i", "<C-k>", function()
+  return vim.fn.pumvisible() == 1 and "<C-p>" or "<Up>"
+end, { expr = true, desc = "Previous item or move up" })
 
 -- Y to EOL
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
