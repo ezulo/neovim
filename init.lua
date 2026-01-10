@@ -317,6 +317,10 @@ vim.api.nvim_create_autocmd("VimResized", {
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = augroup,
   callback = function()
+    -- Skip for Oil buffers or unnamed buffers
+    if vim.bo.filetype == "oil" or vim.api.nvim_buf_get_name(0) == "" then
+      return
+    end
     local dir = vim.fn.expand('<afile>:p:h')
     if vim.fn.isdirectory(dir) == 0 then
       vim.fn.mkdir(dir, 'p')
