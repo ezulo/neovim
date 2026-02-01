@@ -295,7 +295,7 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Quick file navigation
-vim.keymap.set("n", "<leader>e", ":Oil<CR>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>e", ":Oil --float<CR>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>f", ':Pick files<CR>', { desc = "Pick files" })
 vim.keymap.set("n", "<leader>g", ':Pick grep_live<CR>', { desc = "Pick files (grep)" })
 -- vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
