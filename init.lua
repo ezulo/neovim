@@ -115,6 +115,119 @@ end
 
 -- KEYMAPS --
 
+-- LSP
+vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "gp", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then return end
+  local encoding = clients[1].offset_encoding or "utf-16"
+  local params = vim.lsp.util.make_position_params(0, encoding)
+  local hover_content = {}
+  local definition_lines = {}
+  local pending = 2
+
+  local function show_combined()
+    pending = pending - 1
+    if pending > 0 then return end
+
+    local lines = {}
+    if #hover_content > 0 then
+      vim.list_extend(lines, hover_content)
+      if #definition_lines > 0 then
+        table.insert(lines, "")
+        table.insert(lines, "───────────────────────────────")
+        table.insert(lines, "")
+      end
+    end
+    vim.list_extend(lines, definition_lines)
+
+    if #lines == 0 then return end
+
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
+
+    -- Fix markdown highlights for popup
+    vim.api.nvim_set_hl(0, "PeekInlineCode", { bg = "#444444", fg = "#e0e0e0" })
+    vim.api.nvim_set_hl(0, "PeekCodeBlock", { bg = "#333333" })
+    vim.api.nvim_set_hl(0, "PeekCodeDelimiter", { bg = "#444444", fg = "#888888" })
+
+    local width = math.min(80, math.max(unpack(vim.tbl_map(function(l) return #l end, lines))) + 2)
+    local height = math.min(20, #lines)
+    local win = vim.api.nvim_open_win(buf, false, {
+      relative = "cursor",
+      row = 1,
+      col = 0,
+      width = width,
+      height = height,
+      style = "minimal",
+      border = "rounded",
+    })
+
+    -- Apply highlight overrides to popup window
+    vim.api.nvim_set_option_value("winhighlight", table.concat({
+      "markdownCode:PeekInlineCode",
+      "markdownCodeBlock:PeekCodeBlock",
+      "markdownCodeDelimiter:PeekCodeDelimiter",
+      "markdownItalic:NONE",
+      "markdownItalicDelimiter:NONE",
+    }, ","), { win = win })
+
+    -- Disable underscore emphasis in this buffer
+    vim.api.nvim_buf_call(buf, function()
+      vim.cmd("syntax clear markdownItalic")
+      vim.cmd("syntax clear markdownItalicDelimiter")
+    end)
+
+    -- Close on cursor move, buffer leave, or ESC
+    local close_group = vim.api.nvim_create_augroup("PeekClose", { clear = true })
+    local function close_peek()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+      pcall(vim.api.nvim_del_augroup_by_id, close_group)
+      pcall(vim.keymap.del, "n", "<Esc>", { buffer = 0 })
+    end
+
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufLeave" }, {
+      group = close_group,
+      once = true,
+      callback = close_peek,
+    })
+
+    vim.keymap.set("n", "<Esc>", close_peek, { buffer = 0, nowait = true })
+  end
+
+  -- Get hover (docstring)
+  vim.lsp.buf_request(0, "textDocument/hover", params, function(_, result)
+    if result and result.contents then
+      local content = result.contents
+      if type(content) == "string" then
+        hover_content = vim.split(content, "\n")
+      elseif content.value then
+        hover_content = vim.split(content.value, "\n")
+      end
+    end
+    show_combined()
+  end)
+
+  -- Get definition preview
+  vim.lsp.buf_request(0, "textDocument/definition", params, function(_, result)
+    if result and not vim.tbl_isempty(result) then
+      local location = vim.islist(result) and result[1] or result
+      local uri = location.uri or location.targetUri
+      local range = location.range or location.targetSelectionRange
+      local bufnr = vim.uri_to_bufnr(uri)
+      vim.fn.bufload(bufnr)
+      local start_line = range.start.line
+      local end_line = math.min(start_line + 15, range["end"].line + 10)
+      definition_lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, false)
+    end
+    show_combined()
+  end)
+end, { desc = "Preview definition with docstring" })
+
 -- Completion menu navigation
 vim.keymap.set("i", "<Tab>", function()
   return vim.fn.pumvisible() == 1 and "<C-y>" or "<Tab>"
