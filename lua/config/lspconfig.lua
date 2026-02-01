@@ -9,7 +9,7 @@ vim.lsp.config('marksman', {
   root_markers = { '.marksman.toml', '.git' },
 })
 vim.lsp.config('clangd', {
-  cmd = { 'clangd' },
+  cmd = { 'clangd', '--query-driver=**/xtensa-esp*-elf-gcc' },
   filetypes = { 'c', 'cpp' },
   root_markers = { 'compile_commands.json', '.clangd', '.git' },
 })
