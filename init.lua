@@ -118,6 +118,18 @@ end
 -- LSP
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
+
+-- Quickfix navigation
+vim.keymap.set("n", "<C-n>", ":cnext<CR>", { desc = "Next quickfix item", silent = true })
+vim.keymap.set("n", "<C-p>", ":cprev<CR>", { desc = "Previous quickfix item", silent = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function()
+    vim.keymap.set("n", "<Esc>", ":cclose<CR>", { buffer = true, silent = true, desc = "Close quickfix" })
+  end,
+})
 vim.keymap.set("n", "gp", function()
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   if #clients == 0 then return end
@@ -172,12 +184,19 @@ vim.keymap.set("n", "gp", function()
       "markdownCodeDelimiter:PeekCodeDelimiter",
       "markdownItalic:NONE",
       "markdownItalicDelimiter:NONE",
+      "markdownError:NONE",
+      "@markup.italic:NONE",
+      "@markup.italic.markdown_inline:NONE",
+      "@text.emphasis:NONE",
+      "@punctuation.special:PeekCodeDelimiter",
     }, ","), { win = win })
 
-    -- Disable underscore emphasis in this buffer
+    -- Disable treesitter in this buffer and clear syntax
     vim.api.nvim_buf_call(buf, function()
+      vim.treesitter.stop(buf)
       vim.cmd("syntax clear markdownItalic")
       vim.cmd("syntax clear markdownItalicDelimiter")
+      vim.cmd("syntax clear markdownError")
     end)
 
     -- Close on cursor move, buffer leave, or ESC

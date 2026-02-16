@@ -36,6 +36,8 @@ return {
     opts = {
       keymaps = {
         ["q"] = "actions.close",
+        ["<leader>s"] = "actions.select_split",
+        ["<leader>v"] = "actions.select_vsplit",
       },
     },
     -- Optional dependencies
