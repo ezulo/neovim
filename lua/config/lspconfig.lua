@@ -13,6 +13,12 @@ vim.lsp.config('clangd', {
   filetypes = { 'c', 'cpp' },
   root_markers = { 'compile_commands.json', '.clangd', '.git' },
 })
+vim.lsp.config('jdtls', {
+  cmd = { 'jdtls' },
+  filetypes = { 'java' },
+  root_markers = { 'pom.xml', 'build.gradle', '.git' },
+})
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('marksman')
 vim.lsp.enable('clangd')
+vim.lsp.enable('jdtls')
