@@ -112,5 +112,16 @@ return {
             -- Configuration here, or leave empty to use defaults
         })
     end
-  }
+  },
+  {
+    "williamboman/mason.nvim",
+    opts = {},
+  },
+  {
+    "mfussenegger/nvim-dap",
+  },
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+  },
 }
