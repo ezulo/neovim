@@ -821,3 +821,4 @@ setup_dynamic_statusline()
 -- custom imports
 require('autocmd.latex')
 require('autocmd.platformio')
+require('autocmd.jshint')
