@@ -750,9 +750,21 @@ local function mode_icon()
   return modes[mode] or { "  " .. mode:upper() }
 end
 
+-- Git branch (includes separator only when in a git repo)
+local function git_branch()
+  local ok, branch_mod = pcall(require, 'git.command.branch')
+  if not ok then return "" end
+  local branch = branch_mod.current()
+  if branch and branch ~= "" then
+    return " │ " .. branch
+  end
+  return ""
+end
+
 _G.mode_icon = mode_icon
 _G.file_type = file_type
 _G.file_size = file_size
+_G.git_branch = git_branch
 
 vim.cmd([[
     highlight StatusLineBold gui=bold cterm=bold
@@ -768,7 +780,6 @@ local function setup_dynamic_statusline()
         "%#StatusLine#",
         " │ ",
         "%f %h%m%r",
-        " │",
         "%{v:lua.git_branch()}",
         " │ ",
         "%{v:lua.file_type()}",
@@ -795,8 +806,7 @@ local function setup_dynamic_statusline()
         "%#StatusLine#",
         " │ ",
         "%f %h%m%r",
-        " │",
-        "%{v:lua.require('git.command.branch').current()}",
+        "%{v:lua.git_branch()}",
         " │ ",
         "%{v:lua.file_type()}",
         " ",
