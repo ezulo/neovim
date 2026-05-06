@@ -9,7 +9,7 @@ return {
     },
   },
   {
-    "norcalli/nvim-colorizer.lua",
+    "catgoose/nvim-colorizer.lua",
     version = "*",
     lazy = false,
     config = function()
